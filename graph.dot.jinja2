@@ -1,0 +1,14 @@
+digraph "{{title}}" {
+    {%- if rankdir %}
+    rankdir={{rankdir}}
+    {%- endif %}
+    node [fontname="courier"]
+
+    {%- for id, vertex in vertices.items() %}
+    "{{id}}" [label="{{vertex[vertex_graph_label]}}"{% if vertex.link %} href="#vertex.{{vertex.id}}"{% endif %}]
+    {%- endfor %}
+
+    {%- for edge in edges %}
+    "{{edge.from.id}}" -> "{{edge.to.id}}" [label="[{{edge.id}}]"{% if edge.link %} href="#edge.{{edge.id}}"{% endif %}{% if edge.bidir %} dir=both{% endif %}]
+    {%- endfor %}
+}

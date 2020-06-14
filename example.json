@@ -1,0 +1,50 @@
+{
+"title": "Courses",
+"vertices": {
+    "probability": {
+        "name": "MATH 102: Probability",
+        "text": "Covers probability, random variables, expectation, probability distributions and hypothesis testing."
+    },
+    "programming": {
+        "name": "CS 101: Programming",
+        "text": "Teaches the basics of programming, using the C language as an example."
+    },
+    "math-for-cs": {
+        "name": "CS 201: Math for computer science",
+        "text": "Covers mathematical topics frequently encountered in computer science, like proofs, combinatorics, recurrence relations, graph theory and probability."
+    },
+    "dsa": {
+        "name": "CS 202: Data Structures and Algorithms (DSA)"
+    },
+    "software-dev": {
+        "name": "CS 203: Software development",
+        "text": "Teaches elements of robust, professional software development."
+    }
+},
+"edges": [
+    {
+        "from": "probability",
+        "to": "math-for-cs",
+        "text": "Probability is required to study random processes."
+    },
+    {
+        "from": "programming",
+        "to": "dsa",
+        "text": "The practical component of DSA studies how to implement data structures and algorithms as programs."
+    },
+    {
+        "from": "math-for-cs",
+        "to": "dsa",
+        "text": "For proving correctness of algorithms and analyzing their running time."
+    },
+    {
+        "from": "programming",
+        "to": "software-dev"
+    },
+    {
+        "from": "probability",
+        "to": "dsa",
+        "text": "Probability is required to analyze randomized algorithms."
+    }
+]
+}

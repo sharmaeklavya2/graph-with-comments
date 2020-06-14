@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+{% if title %}
+<title>{{title}}</title>
+{% endif %}
+<style>
+{{css}}
+</style>
+</head>
+
+<body>
+{% if title %}
+<h1> {{title}} </h1>
+{% endif %}
+{{svg}}
+
+{% if link_vertices %}
+<h2> Vertices </h2>
+<ol>
+{% for vid, vertex in vertices.items() %}
+{% if vertex.link %}
+<li id="vertex.{{vertex.id}}">
+    {% if vertex.url %}<a href="{{vertex.url}}">{% endif %}
+<span class="label">{{vertex[vertex_list_label]}}</span>{% if vertex.text %}: {{vertex.text}}{% endif %}
+    {% if vertex.url %}</a>{% endif %}
+</li>
+{% endif %}
+{% endfor %}
+</ol>
+{% endif %}
+
+{% if link_edges %}
+<h2> Edges </h2>
+<ol>
+{% for edge in edges %}
+{% if edge.link %}
+<li id="edge.{{edge.id}}" value="{{edge.id}}">
+    {% if edge.url %}<a href="{{edge.url}}">{% endif %}
+<span class="label">({{edge.from[vertex_edge_label]}}, {{edge.to[vertex_edge_label]}})</span>{% if edge.text %}: {{edge.text}}{% endif %}
+    {% if edge.url %}</a>{% endif %}
+</li>
+{% endif %}
+{% endfor %}
+</ol>
+{% endif %}
+</body>
+</html>
