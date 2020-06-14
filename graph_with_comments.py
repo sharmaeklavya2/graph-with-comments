@@ -6,12 +6,12 @@ import argparse
 import json
 import subprocess
 
-from jinja2 import Template
+from jinja2 import DictLoader, Environment
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DOT_TEMPLATE_PATH = pjoin(BASE_DIR, 'graph.dot.jinja2')
-HTML_TEMPLATE_PATH = pjoin(BASE_DIR, 'page.html.jinja2')
+DEFAULT_DOT_TEMPLATE_PATH = pjoin(BASE_DIR, 'graph.dot.jinja2')
+DEFAULT_HTML_TEMPLATE_PATH = pjoin(BASE_DIR, 'page.html.jinja2')
 CSS_PATH = pjoin(BASE_DIR, 'style.css')
 
 
@@ -73,6 +73,17 @@ def process_context(context):
     return context
 
 
+def load_template(custom_path, default_path, **options):
+    default_contents = read_file(default_path)
+    if custom_path is not None:
+        custom_contents = read_file(custom_path)
+    else:
+        custom_contents = '{% extends "base" %}'
+    loader = DictLoader({'base': default_contents, 'custom': custom_contents})
+    env = Environment(loader=loader, **options)
+    return env.get_template('custom')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('input_path', help='path to JSON input file')
@@ -80,6 +91,10 @@ def main():
     parser.add_argument('--out-dot-path')
     parser.add_argument('--out-svg-path')
     parser.add_argument('--out-proc-context-path')
+    parser.add_argument('--dot-template-path',
+        help='path to template that overrides/extends base dot template')
+    parser.add_argument('--html-template-path',
+        help='path to template that overrides/extends base html template')
     args = parser.parse_args()
 
     context = process_context(json.loads(read_file(args.input_path)))
@@ -87,7 +102,7 @@ def main():
         write_file(args.out_proc_context_path, json.dumps(context, indent=4))
 
     # Generate dot file
-    dot_template = Template(read_file(DOT_TEMPLATE_PATH))
+    dot_template = load_template(args.dot_template_path, DEFAULT_DOT_TEMPLATE_PATH)
     dot_graph = dot_template.render(context)
     if args.out_dot_path is not None:
         write_file(args.out_dot_path, dot_graph)
@@ -102,7 +117,8 @@ def main():
     # Generate html
     css = read_file(CSS_PATH)
     context['css'] = css
-    html_template = Template(read_file(HTML_TEMPLATE_PATH), trim_blocks=True, lstrip_blocks=True)
+    html_template = load_template(args.html_template_path, DEFAULT_HTML_TEMPLATE_PATH,
+        trim_blocks=True, lstrip_blocks=True)
     html = html_template.render(context)
     write_file(args.out_html_path, html)
 

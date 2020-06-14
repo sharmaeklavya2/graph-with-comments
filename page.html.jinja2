@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+{% block head %}
 <meta charset="utf-8" />
 {% if title %}
 <title>{{title}}</title>
 {% endif %}
+{% block style %}
 <style>
 {{css}}
 </style>
+{% endblock style %}
+{% endblock head %}
 </head>
 
 <body>
+{% block body %}
 {% if title %}
 <h1> {{title}} </h1>
 {% endif %}
 {{svg}}
 
+{% block vertices %}
 {% if link_vertices %}
 <h2> Vertices </h2>
 <ol>
@@ -30,7 +36,9 @@
 {% endfor %}
 </ol>
 {% endif %}
+{% endblock vertices %}
 
+{% block edges %}
 {% if link_edges %}
 <h2> Edges </h2>
 <ol>
@@ -45,5 +53,7 @@
 {% endfor %}
 </ol>
 {% endif %}
+{% endblock edges %}
+{% endblock body %}
 </body>
 </html>
