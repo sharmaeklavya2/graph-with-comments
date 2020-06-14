@@ -9,7 +9,7 @@ import subprocess
 from jinja2 import DictLoader, Environment
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 DEFAULT_DOT_TEMPLATE_PATH = pjoin(BASE_DIR, 'graph.dot.jinja2')
 DEFAULT_HTML_TEMPLATE_PATH = pjoin(BASE_DIR, 'page.html.jinja2')
 CSS_PATH = pjoin(BASE_DIR, 'style.css')
