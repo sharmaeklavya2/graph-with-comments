@@ -1,0 +1,13 @@
+digraph "Courses" {
+    node [fontname="courier"]
+    "probability" [label="probability" href="#vertex.probability"]
+    "programming" [label="programming" href="#vertex.programming"]
+    "math-for-cs" [label="math-for-cs" href="#vertex.math-for-cs"]
+    "dsa" [label="dsa" href="#vertex.dsa"]
+    "software-dev" [label="software-dev" href="#vertex.software-dev"]
+    "probability" -> "math-for-cs" [label="[1]" href="#edge.1"]
+    "programming" -> "dsa" [label="[2]" href="#edge.2"]
+    "math-for-cs" -> "dsa" [label="[3]" href="#edge.3"]
+    "programming" -> "software-dev" [label="[4]"]
+    "probability" -> "dsa" [label="[5]" href="#edge.5"]
+}

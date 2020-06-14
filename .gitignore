@@ -1,9 +1,6 @@
 *.pyc
 __pycache__/
 /readme.html
-/example.html
-/example.svg
-/example.dot
 
 /secret
 /output
