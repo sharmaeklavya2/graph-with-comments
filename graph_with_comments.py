@@ -6,8 +6,8 @@ import argparse
 import json
 import subprocess
 
-from collections.abc import Mapping, MutableMapping
-from typing import Any, TypeVar
+from collections.abc import Mapping, Sequence
+from typing import Any, Literal, NotRequired, Required, TypedDict
 from jinja2 import DictLoader, Environment
 
 
@@ -27,57 +27,74 @@ def write_file(fpath: str, s: str) -> None:
         fp.write(s)
 
 
-def process_vertices(context: Mapping[str, Any]) -> bool:
-    inferred_linking = False
-    vertices, link_vertices = context['vertices'], context.get('link_vertices')
-    # link_vertices can be True, False or None
+class VertexInfo(TypedDict, total=False):
+    id: str
+    name: str
+    text: str
+    url: str
+
+EdgeInfo = TypedDict('EdgeInfo', {
+    'id': str,
+    'from': Required[str],
+    'to': Required[str],
+    'fromV': VertexInfo,
+    'toV': VertexInfo,
+    'bidir': bool,
+    'text': str,
+    'url': str,
+    'type': str,
+    }, total=False)
+
+class Labels(TypedDict, total=False):
+    title: str
+    vertices: str
+    edges: str
+
+class Config(TypedDict, total=False):
+    rankdir: Literal['LR'] | Literal['TB'] | None
+    showVertices: bool
+    showEdges: bool
+
+class Graph(TypedDict):
+    labels: NotRequired[Labels]
+    config: NotRequired[Config]
+    vertices: Mapping[str, VertexInfo]
+    edges: Sequence[EdgeInfo]
+    css: NotRequired[str]
+    svg: NotRequired[str]
+
+def processVertices(graph: Graph) -> None:
+    vertices = graph['vertices']
     for vid, vinfo in vertices.items():
         vinfo['id'] = vid
-        if link_vertices is None:
-            vinfo['link'] = (vinfo.get(context['vertex_list_label']) is not None
-                or vinfo.get('text') is not None)  # noqa
-            if vinfo['link']:
-                inferred_linking = True
-        else:
-            vinfo['link'] = link_vertices
         if vinfo.get('name') is None:
             vinfo['name'] = vinfo['id']
-    return inferred_linking
 
-
-def process_edges(context: Mapping[str, Any]) -> bool:
-    vertices, edges, link_edges = context['vertices'], context['edges'], context.get('link_edges')
-    inferred_linking = False
+def processEdges(graph: Graph) -> None:
+    vertices, edges = graph['vertices'], graph['edges']
     for i, edge in enumerate(edges):
-        edge['id'] = i + 1
-        edge['from'] = vertices[edge['from']]
-        edge['to'] = vertices[edge['to']]
-        if link_edges is None:
-            edge['link'] = context['vertex_edge_label'] != 'id' or edge.get('text') is not None
-            if edge['link']:
-                inferred_linking = True
-        else:
-            edge['link'] = link_edges
-    return inferred_linking
+        edge['id'] = str(i+1)
+        edge['fromV'] = vertices[edge['from']]
+        edge['toV'] = vertices[edge['to']]
 
 
-MutMapT = TypeVar('MutMapT', bound=MutableMapping[str, Any])
+def processGraph(graph: Graph) -> None:
+    processVertices(graph)
+    processEdges(graph)
 
-def process_context(context: MutMapT) -> MutMapT:
-    context['vertex_graph_label'] = context.get('vertex_graph_label', 'id')
-    context['vertex_list_label'] = context.get('vertex_list_label', 'name')
-    context['vertex_edge_label'] = context.get('vertex_edge_label', 'id')
+    labels = graph.get('labels', {})
+    labels.setdefault('vertices', 'Vertices')
+    labels.setdefault('edges', 'Edges')
+    graph['labels'] = labels
 
-    link_vertices = process_vertices(context)
-    if context.get('link_vertices') is None:
-        context['link_vertices'] = link_vertices
-    link_edges = process_edges(context)
-    if context.get('link_edges') is None:
-        context['link_edges'] = link_edges
-    return context
+    config = graph.get('config', {})
+    config.setdefault('showVertices', True)
+    config.setdefault('showEdges', True)
+    config.setdefault('rankdir', None)
+    graph['config'] = config
 
 
-def load_template(custom_path: str | None, default_path: str, **options: Any) -> Any:
+def loadTemplate(custom_path: str | None, default_path: str, **options: Any) -> Any:
     default_contents = read_file(default_path)
     if custom_path is not None:
         custom_contents = read_file(custom_path)
@@ -91,7 +108,7 @@ def load_template(custom_path: str | None, default_path: str, **options: Any) ->
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('input_path', help='path to JSON input file')
-    parser.add_argument('-o', '--out-html-file', required=True, dest='out_html_path')
+    parser.add_argument('-o', '--out-html-path', required=True)
     parser.add_argument('--out-dot-path')
     parser.add_argument('--out-svg-path')
     parser.add_argument('--out-proc-context-path')
@@ -101,29 +118,30 @@ def main() -> None:
         help='path to template that overrides/extends base html template')
     args = parser.parse_args()
 
-    context = process_context(json.loads(read_file(args.input_path)))
+    graph = json.loads(read_file(args.input_path))
+    processGraph(graph)
     if args.out_proc_context_path is not None:
-        write_file(args.out_proc_context_path, json.dumps(context, indent=4))
+        write_file(args.out_proc_context_path, json.dumps(graph, indent=4))
 
     # Generate dot file
-    dot_template = load_template(args.dot_template_path, DEFAULT_DOT_TEMPLATE_PATH)
-    dot_graph = dot_template.render(context)
+    dotTemplate = loadTemplate(args.dot_template_path, DEFAULT_DOT_TEMPLATE_PATH)
+    dotGraph = dotTemplate.render(graph)
     if args.out_dot_path is not None:
-        write_file(args.out_dot_path, dot_graph)
+        write_file(args.out_dot_path, dotGraph)
 
     # Generate svg
-    run_result = subprocess.run(['dot', '-Tsvg'], input=dot_graph, stdout=subprocess.PIPE,
+    runResult = subprocess.run(['dot', '-Tsvg_inline'], input=dotGraph, stdout=subprocess.PIPE,
         text=True, check=True)
-    context['svg'] = run_result.stdout
+    graph['svg'] = runResult.stdout
     if args.out_svg_path is not None:
-        write_file(args.out_svg_path, context['svg'])
+        write_file(args.out_svg_path, graph['svg'])
 
     # Generate html
     css = read_file(CSS_PATH)
-    context['css'] = css
-    html_template = load_template(args.html_template_path, DEFAULT_HTML_TEMPLATE_PATH,
+    graph['css'] = css
+    htmlTemplate = loadTemplate(args.html_template_path, DEFAULT_HTML_TEMPLATE_PATH,
         trim_blocks=True, lstrip_blocks=True)
-    html = html_template.render(context)
+    html = htmlTemplate.render(graph)
     write_file(args.out_html_path, html)
 
 

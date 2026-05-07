@@ -1,5 +1,9 @@
 {
-"title": "Courses",
+"labels": {
+    "title": "Courses and Prerequisites",
+    "vertices": "Courses",
+    "edges": "Prerequisites"
+},
 "vertices": {
     "probability": {
         "name": "MATH 102: Probability",
