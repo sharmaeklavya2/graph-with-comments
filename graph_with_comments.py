@@ -110,7 +110,6 @@ def main() -> None:
     parser.add_argument('input_path', help='path to JSON input file')
     parser.add_argument('-o', '--out-html-path', required=True)
     parser.add_argument('--out-dot-path')
-    parser.add_argument('--out-svg-path')
     parser.add_argument('--out-proc-context-path')
     parser.add_argument('--dot-template-path',
         help='path to template that overrides/extends base dot template')
@@ -133,8 +132,6 @@ def main() -> None:
     runResult = subprocess.run(['dot', '-Tsvg_inline'], input=dotGraph, stdout=subprocess.PIPE,
         text=True, check=True)
     graph['svg'] = runResult.stdout
-    if args.out_svg_path is not None:
-        write_file(args.out_svg_path, graph['svg'])
 
     # Generate html
     css = read_file(CSS_PATH)
