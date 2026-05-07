@@ -3,7 +3,11 @@
 Specify a graph as a JSON file with (arbitrarily long) comments/descriptions
 attached to nodes and edges. This script will read that file and
 generate an HTML page that can be used to easily view the graph along with the comments.
-See [this example](https://sharmaeklavya2.github.io/graph-with-comments/example.html).
+
+Examples:
+
+1.  [Courses and prerequisites](https://sharmaeklavya2.github.io/graph-with-comments/examples/courses.html).
+2.  [Reductions among NP-complete problems](https://sharmaeklavya2.github.io/graph-with-comments/examples/npc.html).
 
 ## How to run
 
