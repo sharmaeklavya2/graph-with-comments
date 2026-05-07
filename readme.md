@@ -9,7 +9,7 @@ See [this example](https://sharmaeklavya2.github.io/graph-with-comments/example.
 
 * Install `jinja2` (`pip install jinja2`) and `graphviz`.
 * Create a file describing the graph. See `example.json`.
-* `python3 graph_with_comments example.json -o example.html`
+* `python3 graph_with_comments.py example.json -o example.html`
 
 You can view additional command-line options by running
 `python3 graph_with_comments -h`.
