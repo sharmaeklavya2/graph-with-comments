@@ -1,0 +1,258 @@
+{
+"labels": {
+    "title": "Reductions among Problems",
+    "vertices": "Problems",
+    "edges": "Reductions"
+},
+"config": {
+    "rankdir": "LR"
+},
+"vertices": {
+    "circuit-sat": {
+        "name": "Circuit-SAT",
+        "text": "Does a boolean circuit have a satisfying assignment?"
+    },
+    "cnf-sat": {
+        "name": "CNF-SAT",
+        "text": "Does a boolean formula in conjunctive normal form have a satisfying assignment?"
+    },
+    "3-sat": {
+        "name": "3-CNF-SAT",
+        "text": "Does a boolean formula in conjunctive normal form, where each clause has exactly 3 literals, have a satisfying assignment?"
+    },
+    "indset": {
+        "name": "Independent Set",
+        "text": "Is there a subset of size at least k of vertices of an undirected graph such that no 2 vertices in the subset have an edge between them in the graph?"
+    },
+    "vertex-cover": {
+        "name": "Vertex Cover",
+        "text": "Is there a subset of size at most k of vertices of an undirected graph such that every edge has an endpoint in the subset?"
+    },
+    "clique": {
+        "name": "Clique",
+        "text": "Does a graph have a complete subgraph of size k?"
+    },
+    "set-cover": {
+        "name": "Set Cover",
+        "text": "Given a set U and some of its subsets, are there k subsets whose union is U?"
+    },
+    "ham-cycle": {
+        "name": "Hamiltonian Cycle",
+        "text": "Given an undirected graph on n vertices, does it have a cycle of length n?"
+    },
+    "tsp": {
+        "name": "Travelling Salesman Problem",
+        "text": "Given a weighted complete graph, is there a hamiltonian cycle of weight at most w?"
+    },
+    "subset-sum": {
+        "name": "Subset Sum",
+        "text": "Given a set S of integers and an integer k, does a subset of S sum to k?"
+    },
+    "ilp": {
+        "name": "Integer Linear Programming",
+        "text": "Solving a linear program where the variables can only take integral values."
+    },
+    "partition": {
+        "name": "Set Partitioning",
+        "text": "Given set of numbers, partition it into 2 subsets such that they both have the same sum."
+    },
+    "best-partition": {
+        "name": "Best Set Partitioning",
+        "text": "Given set of numbers, partition it into 2 subsets such that the difference between their sums is at most d."
+    },
+    "ham-path": {
+        "name": "Hamiltonian Path",
+        "text": "Given an undirected graph on n vertices, does it have a simple path of length n-1?"
+    },
+    "knapsack": {
+        "name": "Knapsack",
+        "text": "Given n items, each with a certain profit and size, and given a knapsack of limited capacity, can we pack a subset of items to get a profit ≥ P?"
+    },
+    "3-color": {
+        "name": "Graph 3-coloring",
+        "text": "Given a graph, is it possible to color each vertex with one of 3 colors so that no 2 adjacent vertices have the same color?"
+    },
+    "d-ham-path": {
+        "name": "Directed Hamiltonian Path",
+        "text": "Given a directed graph on n vertices, does it have a path of length n-1?"
+    },
+    "d-ham-cycle": {
+        "name": "Directed Hamiltonian Cycle",
+        "text": "Given a directed graph on n vertices, does it have a cycle of length n?"
+    },
+    "makespan": {
+        "name": "Makespan scheduling",
+        "text": "Given n jobs to run on k processors and the time required for each job, is it possible to finish all jobs in time ≤ T?"
+    },
+    "bin-packing": {
+        "name": "Bin Packing",
+        "text": "Given the size of n items, can they be packed in k bins of capacity C?"
+    },
+    "max-cut": {
+        "name": "Max cut",
+        "text": "Given a graph G = (V, E), find a partitioning (S, V-S) such that E∩(S×(V-S)) is maximized."
+    }
+},
+"edges": [
+    {
+        "from": "cnf-sat",
+        "to": "circuit-sat",
+        "trivial": true,
+        "text": "Every CNF formula has an equivalent depth-2 circuit."
+    },
+    {
+        "from": "circuit-sat",
+        "to": "cnf-sat",
+        "text": "CLRS ed3, Theorem 34.9, page 1080."
+    },
+    {
+        "from": "cnf-sat",
+        "to": "indset",
+        "text": "Algorithm Design, Kleinberg-Tardos, Theorem 8.8, page 460. (For every clause k, create i vertices if there are i variables in the clause. Draw an edge between all vertices of a clause and an edge between complementary vertices across clauses.)"
+    },
+    {
+        "from": "3-sat",
+        "to": "cnf-sat",
+        "type": "logspace",
+        "trivial": true,
+        "text": "A 3-CNF-SAT instance is also a CNF-SAT instance."
+    },
+    {
+        "from": "cnf-sat",
+        "to": "3-sat",
+        "type": "logspace",
+        "url": "https://cse.iitkgp.ac.in/~palash/2018AlgoDesignAnalysis/SAT-3SAT.pdf"
+    },
+    {
+        "from": "indset",
+        "to": "vertex-cover",
+        "type": "logspace",
+        "bidir": true,
+        "text": "In a graph (V, E), S is a vertex cover iff V-S is an independent set."
+    },
+    {
+        "from": "indset",
+        "to": "clique",
+        "bidir": true,
+        "type": "logspace",
+        "trivial": true,
+        "text": "S is an independent set in graph G iff S is a clique in the complement of G."
+    },
+    {
+        "from": "vertex-cover",
+        "to": "set-cover",
+        "trivial": true,
+        "text": "For each vertex v, create the set Sv of all edges incident on v. If some of these sets span the set of edges, then the corresponding vertices form a vertex cover."
+    },
+    {
+        "from": "ham-cycle",
+        "to": "tsp",
+        "type": "logspace",
+        "trivial": true,
+        "text": "Given a graph G, construct a weighted graph G' where c(u, v) = 0 if (u, v) in G and c(u, v) = 1 otherwise. Then G' has a 0-weight tour iff G has a hamiltonian cycle."
+    },
+    {
+        "from": "3-sat",
+        "to": "subset-sum",
+        "text": "CLRS ed3, Theorem 34.15, page 1097."
+    },
+    {
+        "from": "set-cover",
+        "to": "ilp",
+        "text": "Represent the set cover instance as a linear program. Each set corresponds to a boolean variable and the requirement of covering each element becomes a linear constraint."
+    },
+    {
+        "from": "subset-sum",
+        "to": "partition",
+        "text": "CLRS ed3, Exercise 34.5-5, page 1101. See solutions by Bodnar and Lohr.",
+        "url": "https://sites.math.rutgers.edu/~ajl213/CLRS/Ch34.pdf"
+    },
+    {
+        "from": "ham-cycle",
+        "to": "ham-path",
+        "text": "CLRS ed3, Exercise 34.5-6, page 1101. See solutions by Bodnar and Lohr.",
+        "url": "https://sites.math.rutgers.edu/~ajl213/CLRS/Ch34.pdf"
+    },
+    {
+        "from": "subset-sum",
+        "to": "knapsack",
+        "text": "For every number x in the set, create an item of weight x and size x. If the target is t, get a knapsack of size t. A subset sums to t iff we can get profit ≥ t."
+    },
+    {
+        "from": "partition",
+        "to": "subset-sum",
+        "trivial": true,
+        "text": "Let s be the sum of set X. X can be partitioned into 2 subsets of equal sum iff there is a subset of X of sum s/2."
+    },
+    {
+        "from": "knapsack",
+        "to": "ilp",
+        "trivial": true
+    },
+    {
+        "from": "cnf-sat",
+        "to": "ilp",
+        "text": "Add a constraint for each clause. For example, '(u1 or !u2 or u3)' becomes 'u1 + (1-u2) + u3 ≥ 1'."
+    },
+    {
+        "from": "vertex-cover",
+        "to": "ham-cycle",
+        "text": "CLRS ed3, Theorem 34.13, page 1091."
+    },
+    {
+        "from": "3-sat",
+        "to": "3-color",
+        "text": "CLRS ed3, Problem 34.3, page 1103. See solutions by Bodnar and Lohr.",
+        "url": "https://sites.math.rutgers.edu/~ajl213/CLRS/Ch34.pdf"
+    },
+    {
+        "from": "3-sat",
+        "to": "d-ham-path",
+        "text": "Computational Complexity (internet draft), Arora and Barak, Theorem 2.18, page 52.",
+        "url": "https://theory.cs.princeton.edu/complexity/book.pdf"
+    },
+    {
+        "from": "3-sat",
+        "to": "d-ham-cycle",
+        "text": "Computational Complexity (internet draft), Arora and Barak, Theorem 2.18 (page 52) shows a polytime reduction from 3-sat to directed hamiltonian path. In the directed graph constructed there, add an edge from the end vertex to the start vertex.",
+        "url": "https://theory.cs.princeton.edu/complexity/book.pdf"
+    },
+    {
+        "from": "partition",
+        "to": "makespan",
+        "text": "Let X be a set of integers with sum s. For each integer x, create a job which requires x units of time. Then X can be partitioned into 2 equal-sum subsets iff all these jobs can be finished in time ≤ s/2 on 2 processors."
+    },
+    {
+        "from": "partition",
+        "to": "bin-packing",
+        "type": "logspace",
+        "text": "Let X be a set of integers with sum s. For each integer x, create an item of size x. Then X can be partitioned into 2 equal-sum subsets iff all these items can be packed in 2 bins."
+    },
+    {
+        "from": "d-ham-cycle",
+        "to": "ham-cycle",
+        "text": "For every vertex v in directed graph, create vertices v1, v2, v3 in undirected graph. For every edge (u, v) in directed graph, add edge (u3, v1) in undirected graph. Directed graph has ham-cycle iff undirected graph has ham-cycle."
+    },
+    {
+        "from": "ham-cycle",
+        "to": "d-ham-cycle",
+        "text": "Replace every undirected edge {u, v} by 2 directed edges (u, v) and (v, u). Directed graph has ham-cycle iff undirected graph has ham-cycle"
+    },
+    {
+        "from": "best-partition",
+        "to": "partition",
+        "text": "CLRS ed3, Problem 34-2 d, page 1102. See solutions by Bodnar and Lohr.",
+        "url": "https://sites.math.rutgers.edu/~ajl213/CLRS/Ch34.pdf"
+    },
+    {
+        "from": "partition",
+        "to": "best-partition",
+        "text": "A partition instance is a best-partition instance with difference 0."
+    },
+    {
+        "from": "indset",
+        "to": "max-cut",
+        "url": "https://people.engr.ncsu.edu/mfms/Teaching/CSC505/wrap/Lectures/week14.pdf"
+    }
+]
+}
