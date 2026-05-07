@@ -8,8 +8,8 @@ See [this example](https://sharmaeklavya2.github.io/graph-with-comments/example.
 ## How to run
 
 * Install `jinja2` (`pip install jinja2`) and `graphviz`.
-* Create a file describing the graph. See `example.json`.
-* `python3 graph_with_comments.py example.json -o example.html`
+* Create a file describing the graph. See the `examples` directory.
+* `python3 graph_with_comments.py examples/courses.json -o courses.html`
 
 You can view additional command-line options by running
 `python3 graph_with_comments -h`.
