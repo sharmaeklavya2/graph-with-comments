@@ -5,7 +5,9 @@
     "edges": "Reductions"
 },
 "config": {
-    "rankdir": "LR"
+    "rankdir": "LR",
+    "arrow": "≤",
+    "arrowBi": "="
 },
 "vertices": {
     "circuit-sat": {
@@ -115,12 +117,14 @@
         "to": "cnf-sat",
         "type": "logspace",
         "trivial": true,
+        "arrow": "≤ᴸ",
         "text": "A 3-CNF-SAT instance is also a CNF-SAT instance."
     },
     {
         "from": "cnf-sat",
         "to": "3-sat",
         "type": "logspace",
+        "arrow": "≤ᴸ",
         "url": "https://cse.iitkgp.ac.in/~palash/2018AlgoDesignAnalysis/SAT-3SAT.pdf"
     },
     {
@@ -128,6 +132,7 @@
         "to": "vertex-cover",
         "type": "logspace",
         "bidir": true,
+        "arrow": "=ᴸ",
         "text": "In a graph (V, E), S is a vertex cover iff V-S is an independent set."
     },
     {
@@ -136,6 +141,7 @@
         "bidir": true,
         "type": "logspace",
         "trivial": true,
+        "arrow": "=ᴸ",
         "text": "S is an independent set in graph G iff S is a clique in the complement of G."
     },
     {
@@ -149,6 +155,7 @@
         "to": "tsp",
         "type": "logspace",
         "trivial": true,
+        "arrow": "≤ᴸ",
         "text": "Given a graph G, construct a weighted graph G' where c(u, v) = 0 if (u, v) in G and c(u, v) = 1 otherwise. Then G' has a 0-weight tour iff G has a hamiltonian cycle."
     },
     {
@@ -226,6 +233,7 @@
         "from": "partition",
         "to": "bin-packing",
         "type": "logspace",
+        "arrow": "≤ᴸ",
         "text": "Let X be a set of integers with sum s. For each integer x, create an item of size x. Then X can be partitioned into 2 equal-sum subsets iff all these items can be packed in 2 bins."
     },
     {

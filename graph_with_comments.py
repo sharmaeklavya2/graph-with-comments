@@ -40,6 +40,7 @@ EdgeInfo = TypedDict('EdgeInfo', {
     'fromV': VertexInfo,
     'toV': VertexInfo,
     'bidir': bool,
+    'arrow': str,
     'text': str,
     'url': str,
     'type': str,
@@ -54,6 +55,8 @@ class Config(TypedDict, total=False):
     rankdir: Literal['LR'] | Literal['TB'] | None
     showVertices: bool
     showEdges: bool
+    arrow: str
+    arrowBi: str
 
 class Graph(TypedDict):
     labels: NotRequired[Labels]
@@ -91,6 +94,8 @@ def processGraph(graph: Graph) -> None:
     config.setdefault('showVertices', True)
     config.setdefault('showEdges', True)
     config.setdefault('rankdir', None)
+    config.setdefault('arrow', '→')
+    config.setdefault('arrowBi', '=')
     graph['config'] = config
 
 

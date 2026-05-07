@@ -46,7 +46,7 @@
 {% for edge in edges %}
 <li id="edge.{{edge.id}}">
     {% if edge.url %}<a href="{{edge.url}}">{% endif %}
-<span class="label">{{edge.from}} {% if edge.bidir %}={% else %}→{% endif %} {{edge.to}}</span>{% if edge.text %}: {{edge.text}}{% endif %}
+<span class="edgeSpec"><span class="label">{{edge.from}}</span> <span class="arrow">{% if edge.bidir %}{{edge.arrow or config.arrowBi}}{% else %}{{edge.arrow or config.arrow}}{% endif %}</span> <span class="label">{{edge.to}}</span></span>{% if edge.text %}: {{edge.text}}{% endif %}
     {% if edge.url %}</a>{% endif %}
 </li>
 {% endfor %}
