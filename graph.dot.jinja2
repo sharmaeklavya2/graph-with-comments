@@ -5,10 +5,10 @@ digraph {% if labels.title %}"{{title}}"{% endif %} {
     node [shape=box, margin="0.1,0.03", width=0, height=0, fontname="monospace"];
 
     {%- for id, vertex in vertices.items() %}
-    "{{id}}" [label="{{vertex.id}}" href="#vertex.{{vertex.id}}"]
+    "{{id}}" [label="{{vertex.id}}"{% if config.showVertices %} href="#vertex.{{vertex.id}}"{% endif %}]
     {%- endfor %}
 
     {%- for edge in edges %}
-    "{{edge.from}}" -> "{{edge.to}}" [label="[{{edge.id}}]" href="#edge.{{edge.id}}"{% if edge.bidir %} dir=both{% endif %}]
+    "{{edge.from}}" -> "{{edge.to}}" [label="[{{edge.id}}]"{% if config.showEdges %} href="#edge.{{edge.id}}"{% endif %}{% if edge.bidir %} dir=both{% endif %}]
     {%- endfor %}
 }
