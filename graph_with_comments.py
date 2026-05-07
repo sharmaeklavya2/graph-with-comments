@@ -6,6 +6,8 @@ import argparse
 import json
 import subprocess
 
+from collections.abc import Mapping, MutableMapping
+from typing import Any, TypeVar
 from jinja2 import DictLoader, Environment
 
 
@@ -15,17 +17,17 @@ DEFAULT_HTML_TEMPLATE_PATH = pjoin(BASE_DIR, 'page.html.jinja2')
 CSS_PATH = pjoin(BASE_DIR, 'style.css')
 
 
-def read_file(fpath):
+def read_file(fpath: str) -> str:
     with open(fpath) as fp:
         return fp.read()
 
 
-def write_file(fpath, s):
+def write_file(fpath: str, s: str) -> None:
     with open(fpath, 'w') as fp:
         fp.write(s)
 
 
-def process_vertices(context):
+def process_vertices(context: Mapping[str, Any]) -> bool:
     inferred_linking = False
     vertices, link_vertices = context['vertices'], context.get('link_vertices')
     # link_vertices can be True, False or None
@@ -43,7 +45,7 @@ def process_vertices(context):
     return inferred_linking
 
 
-def process_edges(context):
+def process_edges(context: Mapping[str, Any]) -> bool:
     vertices, edges, link_edges = context['vertices'], context['edges'], context.get('link_edges')
     inferred_linking = False
     for i, edge in enumerate(edges):
@@ -59,7 +61,9 @@ def process_edges(context):
     return inferred_linking
 
 
-def process_context(context):
+MutMapT = TypeVar('MutMapT', bound=MutableMapping[str, Any])
+
+def process_context(context: MutMapT) -> MutMapT:
     context['vertex_graph_label'] = context.get('vertex_graph_label', 'id')
     context['vertex_list_label'] = context.get('vertex_list_label', 'name')
     context['vertex_edge_label'] = context.get('vertex_edge_label', 'id')
@@ -73,7 +77,7 @@ def process_context(context):
     return context
 
 
-def load_template(custom_path, default_path, **options):
+def load_template(custom_path: str | None, default_path: str, **options: Any) -> Any:
     default_contents = read_file(default_path)
     if custom_path is not None:
         custom_contents = read_file(custom_path)
@@ -84,7 +88,7 @@ def load_template(custom_path, default_path, **options):
     return env.get_template('custom')
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('input_path', help='path to JSON input file')
     parser.add_argument('-o', '--out-html-file', required=True, dest='out_html_path')
