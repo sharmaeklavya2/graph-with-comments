@@ -1,8 +1,27 @@
-html {font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, 'Open Sans', sans-serif;}
-body {margin: 0; padding: 0 2.5em; color: #202020; line-height: 1.5; font-size: 1.1em;}
+/* color scheme */
+body {
+    --bg-color: white; --text-color: #202020; --text-rgb: 0 0 0;
+    --emph-color: #101010; --dim-color: #888;
+    --link-color: #1a0dab; --vlink-color: #681da8;
+    --invert-filter: brightness(.85) invert(1) brightness(.75) hue-rotate(180deg);
+}
+@media (prefers-color-scheme: dark) {
+    body {
+        --bg-color: #1b1e20; --text-color: #c8c8c8; --text-rgb: 255 255 255;
+        --emph-color: #e4e4e4;
+        --link-color: #8ab4f8; --vlink-color: #c58af9;
+    }
+    svg {filter: var(--invert-filter);}
+}
+
+body {
+    margin: 0; padding: 0 2.5em;
+    color: var(--text-color); background-color: var(--bg-color);
+    line-height: 1.5; font-size: 1.1em; font-family: sans-serif;
+}
 @media (max-width: 820px) {body {padding: 0 1em;}}
-a {text-decoration: none; color: blue;}
-svg a text {fill: blue;}
+a {text-decoration: none; color: var(--link-color);}
 a:hover {text-decoration: underline;}
-li:target {background-color: rgba(0, 0, 0, 0.1);}
+svg a text {fill: #1a0dab;}
+li:target {background-color: rgba(var(--text-rgb) / 0.1);}
 .label {font-weight: bold;}
