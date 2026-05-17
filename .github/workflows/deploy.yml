@@ -1,0 +1,41 @@
+name: deploy-to-github-pages
+on:
+  push:
+    branches: [master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+        with:
+          repository: sharmaeklavya2/auto-index
+          path: auto-index
+      # - run: sudo apt-get install -y graphviz
+      - run: |  # install the latest graphviz so that we can use the svg_inline format
+          curl -Lo graphviz.deb 'https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/14.1.5/ubuntu_24.04_graphviz-14.1.5-cmake.deb'
+          sudo dpkg -i graphviz.deb || sudo apt-get install -f -y
+      - run: dot -V
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+          cache: pip
+      - run: pip install jinja2
+      - run: python3 graph_with_comments.py examples/courses.json -o examples/courses.html --out-dot-path examples/courses.dot
+      - run: python3 graph_with_comments.py examples/npc.json -o examples/npc.html --out-dot-path examples/npc.dot
+      - run: python3 auto-index/auto-index.py examples
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: examples
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: '${{ steps.deployment.outputs.page_url }}'
+    steps:
+      - uses: actions/deploy-pages@v5
+        id: deployment
